@@ -812,7 +812,8 @@ abstract class WordPressItemMigration extends WordPressMigration {
     
     $podpress_podcast_field = variable_get('wordpress_migrate_podpress_podcast_field');
     $podpress_prefix = variable_get('wordpress_migrate_podpress_podcast_url_prefix');
-    if ($podpress_podcast_field && isset($node->$podpress_podcast_field) && property_exists($row, '_podPressMedia')) {
+    if ($podpress_podcast_field && isset($node->$podpress_podcast_field) && property_exists($row, '_podPressMedia')
+        && module_exists('file_entity')) {
       // Parse the _podPressMedia element
       $podpress_media = unserialize($row->_podPressMedia);
       $podpress_post_specific = unserialize($row->_podPressPostSpecific);

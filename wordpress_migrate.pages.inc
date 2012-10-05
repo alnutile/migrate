@@ -210,19 +210,22 @@ function wordpress_migrate_import_form($form, &$form_state) {
       '#options' => $file_fields,
       '#description' => t(''),
     );
-    $form['settings']['wordpress_migrate_podpress_podcast_field'] = array(
-      '#type' => 'select',
-      '#title' => t('Field for PodPress podcasts'),
-      '#default_value' => variable_get ('wordpress_migrate_podpress_podcast_field', ''),
-      '#options' => $file_fields,
-      '#description' => t(''),
-    );
-    $form['settings']['wordpress_migrate_podpress_podcast_url_prefix'] = array(
-      '#type' => 'textfield',
-      '#title' => t('PodPress podcast url prefix'),
-      '#default_value' => variable_get ('wordpress_migrate_podpress_podcast_url_prefix', ''),
-      '#description' => t('First manually copy the PodPress media files to your Drupal files directory. Then enter the path here, e.g., site/default/files/podcasts'),
-    );
+    if (module_exists('file_entity')) {
+      $form['settings']['wordpress_migrate_podpress_podcast_field'] = array(
+        '#type' => 'select',
+        '#title' => t('Field for PodPress podcasts'),
+        '#default_value' => variable_get ('wordpress_migrate_podpress_podcast_field', ''),
+        '#options' => $file_fields,
+        '#description' => t(''),
+      );
+      $form['settings']['wordpress_migrate_podpress_podcast_url_prefix'] = array(
+        '#type' => 'textfield',
+        '#title' => t('PodPress podcast url prefix'),
+        '#default_value' => variable_get ('wordpress_migrate_podpress_podcast_url_prefix', ''),
+        '#description' => t('First manually copy the PodPress media files to your Drupal files directory. Then enter the path here, e.g., site/default/files/podcasts.' .
+                                    t('Important: The files will be moved to a new location after a successful import.')),
+      );
+    }
   }
   else {
     $form['settings']['wordpress_migrate_podcast_field'] = array(
