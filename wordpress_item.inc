@@ -290,6 +290,11 @@ abstract class WordPressItemMigration extends WordPressMigration {
            ->callbacks(array($this, 'handleEnclosure'));
     }
 
+    $podpress_podcast_field = variable_get('wordpress_migrate_podpress_podcast_field', '');
+    if ($podpress_podcast_field) {
+      $this->addFieldMapping($podpress_podcast_field, 'postmeta');
+    }
+    
     // If an attachment field is configured, document the mapping.
     $attachment_field = variable_get('wordpress_migrate_attachment_field', '');
     if ($attachment_field) {
@@ -693,7 +698,7 @@ abstract class WordPressItemMigration extends WordPressMigration {
     $value_array = explode("\n", $value);
     return reset($value_array);
   }
-
+  
   /**
    * Prepare node - called just before node_save().
    *
@@ -803,6 +808,23 @@ abstract class WordPressItemMigration extends WordPressMigration {
             $link, $node->body[LANGUAGE_NONE][0]['value']);
         }
       }
+    }
+    
+    $podpress_podcast_field = variable_get('wordpress_migrate_podpress_podcast_field');
+    $podpress_prefix = variable_get('wordpress_migrate_podpress_podcast_url_prefix');
+    if ($podpress_podcast_field && isset($node->$podpress_podcast_field) && property_exists($row, '_podPressMedia')) {
+      // Parse the _podPressMedia element
+      $podpress_media = unserialize($row->_podPressMedia);
+      $podpress_post_specific = unserialize($row->_podPressPostSpecific);
+      // Get the last part of the URL component
+      $podcast_uri = $podpress_media[0]['URI'];
+      $parsed = parse_url($podcast_uri);
+      $podcast_filename = basename($parsed['path']);
+      $podcast_full_path = $podpress_prefix . '/' . $podcast_filename;
+      $file_object = file_uri_to_object($podcast_full_path, TRUE);
+      $file_object->display = '1';
+      $file_object = file_save($file_object);
+      $node->{$podpress_podcast_field}[LANGUAGE_NONE][] = (array)$file_object;
     }
   }
 

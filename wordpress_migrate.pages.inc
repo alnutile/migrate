@@ -210,6 +210,19 @@ function wordpress_migrate_import_form($form, &$form_state) {
       '#options' => $file_fields,
       '#description' => t(''),
     );
+    $form['settings']['wordpress_migrate_podpress_podcast_field'] = array(
+      '#type' => 'select',
+      '#title' => t('Field for PodPress podcasts'),
+      '#default_value' => variable_get ('wordpress_migrate_podpress_podcast_field', ''),
+      '#options' => $file_fields,
+      '#description' => t(''),
+    );
+    $form['settings']['wordpress_migrate_podpress_podcast_url_prefix'] = array(
+      '#type' => 'textfield',
+      '#title' => t('PodPress podcast url prefix'),
+      '#default_value' => variable_get ('wordpress_migrate_podpress_podcast_url_prefix', ''),
+      '#description' => t('First manually copy the PodPress media files to your Drupal files directory. Then enter the path here, e.g., site/default/files/podcasts'),
+    );
   }
   else {
     $form['settings']['wordpress_migrate_podcast_field'] = array(
@@ -354,6 +367,8 @@ function wordpress_migrate_import_form_submit($form, &$form_state) {
   variable_set('wordpress_migrate_post_type', $values['wordpress_migrate_post_type']);
   variable_set('wordpress_migrate_attachment_field', $values['wordpress_migrate_attachment_field']);
   variable_set('wordpress_migrate_podcast_field', $values['wordpress_migrate_podcast_field']);
+  variable_set('wordpress_migrate_podpress_podcast_field', $values['wordpress_migrate_podpress_podcast_field']);
+  variable_set('wordpress_migrate_podpress_podcast_url_prefix', $values['wordpress_migrate_podpress_podcast_url_prefix']);
   variable_set('wordpress_migrate_text_format', $values['wordpress_migrate_text_format']);
   variable_set('wordpress_migrate_text_format_comment', $values['wordpress_migrate_text_format_comment']);
   variable_set('wordpress_migrate_page_type', $values['wordpress_migrate_page_type']);
